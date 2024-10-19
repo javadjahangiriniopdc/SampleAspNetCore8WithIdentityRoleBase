@@ -16,9 +16,17 @@ namespace SampleAspNetCore8WithIdentityRoleBase
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // Add Identity services with Role support
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             builder.Services.AddControllersWithViews();
+            // Add Razor Pages
+            builder.Services.AddRazorPages(); // Add this line
 
             var app = builder.Build();
 
@@ -39,11 +47,13 @@ namespace SampleAspNetCore8WithIdentityRoleBase
 
             app.UseRouting();
 
+            app.UseAuthentication(); // Add this line for authentication
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.MapRazorPages();
 
             app.Run();
