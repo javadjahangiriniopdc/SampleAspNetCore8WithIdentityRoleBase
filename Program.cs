@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using SampleAspNetCore8WithIdentityRoleBase.Data;
 
@@ -23,6 +24,8 @@ namespace SampleAspNetCore8WithIdentityRoleBase
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
             builder.Services.AddControllersWithViews();
             // Add Razor Pages
