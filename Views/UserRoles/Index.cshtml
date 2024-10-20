@@ -1,0 +1,29 @@
+﻿@model IEnumerable<SampleAspNetCore8WithIdentityRoleBase.Models.UserRolesViewModel>
+
+@{
+    ViewData["Title"] = "Manage User Roles";
+}
+
+<h1>Manage User Roles</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>User Name</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@string.Join(", ", user.Roles)</td>
+            <td>
+                <a asp-action="Manage" asp-route-userId="@user.UserId" class="btn btn-primary">Manage Roles</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SampleAspNetCore8WithIdentityRoleBase.Models;
 
 namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
 {
+    [Authorize] // نیاز به ورود به سیستم برای تمام اکشن‌ها
     public class OrderAppsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +22,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: OrderApps
+       
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.OrderApps.Include(o => o.Customer).Include(o => o.Product);
@@ -27,6 +30,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: OrderApps/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,6 +51,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: OrderApps/Create
+        [Authorize(Roles = "User,Admin,Manager")]
         public IActionResult Create()
         {
             // تنظیم تاریخ و زمان جاری
@@ -71,6 +76,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User,Admin,Manager")]
         public async Task<IActionResult> Create([Bind("Id,CustomerID,ProductID,Quantity,Price,PriceAll,CreatAt,UpdateAt")] OrderApp orderApp)
         {
             if (ModelState.IsValid)
@@ -90,6 +96,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: OrderApps/Edit/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,6 +129,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CustomerID,ProductID,Quantity,Price,PriceAll,CreatAt,UpdateAt")] OrderApp orderApp)
         {
             if (id != orderApp.Id)
@@ -164,6 +172,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: OrderApps/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -186,6 +195,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         // POST: OrderApps/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var orderApp = await _context.OrderApps.FindAsync(id);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SampleAspNetCore8WithIdentityRoleBase.Models;
 
 namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
 {
+    [Authorize] // نیاز به ورود به سیستم برای تمام اکشن‌ها
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,12 +22,14 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: Products
+        [Authorize(Roles = "User,Admin,Manager")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Products.ToListAsync());
         }
 
         // GET: Products/Details/5
+        [Authorize(Roles = "User,Admin,Manager")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,6 +48,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = "User,Admin,Manager")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +59,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User,Admin,Manager")]
         public async Task<IActionResult> Create([Bind("Id,Name,Price")] Product product)
         {
             if (ModelState.IsValid)
@@ -66,6 +72,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +93,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price")] Product product)
         {
             if (id != product.Id)
@@ -117,6 +125,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +146,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);

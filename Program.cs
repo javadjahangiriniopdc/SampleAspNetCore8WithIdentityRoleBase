@@ -25,6 +25,14 @@ namespace SampleAspNetCore8WithIdentityRoleBase
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // Set the Access Denied path
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied"; // уг?б Access Denied
+            });
+
+
+
             builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
             builder.Services.AddControllersWithViews();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SampleAspNetCore8WithIdentityRoleBase.Models;
 
 namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
 {
+    [Authorize] // نیاز به ورود به سیستم برای تمام اکشن‌ها
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -44,16 +46,16 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: Customers/Create
+        [Authorize(Roles = "User,Admin,Manager")] // فقط کاربران با نقش User مجاز به دسترسی
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User,Admin,Manager")] // فقط کاربران با نقش User مجاز به دسترسی
         public async Task<IActionResult> Create([Bind("Id,Name,LastName,Address,Phone,Email")] Customer customer)
         {
             if (ModelState.IsValid)
@@ -66,6 +68,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: Customers/Edit/5
+        [Authorize(Roles = "Manager,Admin")] // فقط کاربران با نقش Manager مجاز به دسترسی
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,10 +85,9 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager,Admin")] // فقط کاربران با نقش Manager مجاز به دسترسی
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName,Address,Phone,Email")] Customer customer)
         {
             if (id != customer.Id)
@@ -117,6 +119,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         }
 
         // GET: Customers/Delete/5
+        [Authorize(Roles = "Admin")] // فقط کاربران با نقش Admin مجاز به دسترسی
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +140,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase.Controllers
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")] // فقط کاربران با نقش Admin مجاز به دسترسی
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);

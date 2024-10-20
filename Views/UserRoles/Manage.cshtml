@@ -1,0 +1,32 @@
+﻿@model SampleAspNetCore8WithIdentityRoleBase.Models.ManageUserRolesViewModel
+
+@{
+    ViewData["Title"] = "Manage Roles for " + Model.UserName;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Manage" method="post">
+    <input type="hidden" asp-for="UserId" />
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Role</th>
+            <th>Assigned</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (var i = 0; i < Model.Roles.Count; i++)
+        {
+            <tr>
+                <td>@Model.Roles[i].RoleName</td>
+                <td>
+                    <input type="checkbox" asp-for="Roles[i].IsSelected" />
+                    <input type="hidden" name="Roles[@i].RoleName" value="@Model.Roles[i].RoleName" />
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
