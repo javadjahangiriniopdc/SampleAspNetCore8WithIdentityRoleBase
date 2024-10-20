@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+ï»¿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using SampleAspNetCore8WithIdentityRoleBase.Data;
@@ -7,7 +7,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +28,7 @@ namespace SampleAspNetCore8WithIdentityRoleBase
             // Set the Access Denied path
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.AccessDeniedPath = "/Account/AccessDenied"; // ãÓ?Ñ Access Denied
+                options.AccessDeniedPath = "/Account/AccessDenied"; // Ù…Ø³ÛŒØ± Access Denied
             });
 
 
@@ -66,6 +66,13 @@ namespace SampleAspNetCore8WithIdentityRoleBase
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages();
+
+            // Seed data
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await SeedData.Initialize(services);
+            }
 
             app.Run();
         }

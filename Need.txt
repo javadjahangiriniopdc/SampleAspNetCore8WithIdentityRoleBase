@@ -1,0 +1,5 @@
+˜ÇÑÈÑ admin@admin.com ÈÇ ÑãÒ ÚÈæÑ Admin@1234567
+
+Add-Migration "InitialCreate"
+
+Update-Database
